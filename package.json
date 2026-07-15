@@ -1,0 +1,19 @@
+{
+  "name": "sauce-site",
+  "version": "1.0.0",
+  "description": "Test-playwright-sauce-site",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "playwright": "^1.61.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
+}
