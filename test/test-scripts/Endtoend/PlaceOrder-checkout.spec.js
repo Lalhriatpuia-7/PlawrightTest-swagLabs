@@ -156,4 +156,38 @@ test.describe("Place Order Checkout Tests", () => {
 
     });
 
+    test('check empty carts dont have any items and total is zero', async ({ page }) => {
+        // Ensure the cart is empty
+        await page.locator('.shopping_cart_link').click();
+        await expect(page).toHaveURL(`${baseUrl}/cart.html`);
+        await expect(page.locator('.cart_item')).toHaveCount(0);
+        
+        //check cart items to be empty
+        const cartItems = await page.locator('.cart_item').count();
+        expect(cartItems).toBe(0);
+
+        // Attempt to proceed to checkout
+        await page.getByRole('button', { name: 'Checkout' }).click();
+
+        // fill the checkout information
+        await page.getByRole('textbox', { name: 'First Name' }).fill('John');
+        await page.getByRole('textbox', { name: 'Last Name' }).fill('Doe');
+        await page.getByRole('textbox', { name: 'Zip/Postal Code' }).fill('12345');
+        await page.getByRole('button', { name: 'Continue' }).click();
+
+        // Verify that the user is still on the checkout step one page
+        await expect(page).toHaveURL(`${baseUrl}/checkout-step-two.html`);
+        await expect(page.locator('data-test=total-label')).toHaveText('Total: $0.00');
+
+        // Complete the order
+        await page.getByRole('button', { name: 'Finish' }).click();
+        await expect(page).toHaveURL(`${baseUrl}/checkout-complete.html`);
+        await expect(page.getByText('THANK YOU FOR YOUR ORDER')).toBeVisible();
+
+        //back to home page
+        await page.getByRole('button', { name: 'Back Home' }).click();
+        await expect(page).toHaveURL(`${baseUrl}/inventory.html`);
+        
+    });
+
 });
